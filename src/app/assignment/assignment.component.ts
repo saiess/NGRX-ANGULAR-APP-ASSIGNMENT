@@ -1,10 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AssignmentService } from '../shared/assignment.service';
-import {
-  CoffeeListRepresentation,
-  CoffeeModel,
-} from '../shared/models/coffeeListRepresentation';
-// import { CoffeeModel } from '../shared/store/coffeeData.model';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import {CoffeeListRepresentation} from '../shared/models/coffeeListRepresentation';
 import { Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
@@ -19,30 +16,50 @@ import * as DataActions from '../shared/store/coffeeData.actions';
   templateUrl: './assignment.component.html',
   styleUrls: ['./assignment.component.scss'],
 })
-export class AssignmentComponent implements OnInit {
+export class AssignmentComponent implements OnInit, AfterViewInit {
   coffeList$: Observable<CoffeeListRepresentation[]> = of([]);
   coffeList: CoffeeListRepresentation[] = [];
   loading$: Observable<boolean> = of(false);
   error$: Observable<any> = of();
   numberOfItems: number = 6;
+  showAsTable: boolean = false;
+
+  displayedColumns: string[] = [
+    'blend_name',
+    'origin',
+    'variety',
+    'notes',
+    'intensifier',
+  ];
+  dataSource = new MatTableDataSource<CoffeeListRepresentation>(this.coffeList);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(DataActions.loadCoffee());
-
     this.coffeList$ = this.store.select(selectCoffeData);
     this.loading$ = this.store.select(selectLoading);
     this.error$ = this.store.select(selectError);
 
-    this.store.select(selectCoffeData).subscribe((res) => {
+    this.coffeList$.subscribe((res) => {
       if (res) {
         this.coffeList = res;
+        this.dataSource.data = res;
       }
     });
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   showMoreItems = () => {
     this.numberOfItems += 6;
+  };
+
+  showTable = () => {
+    this.showAsTable = !this.showAsTable;
   };
 }

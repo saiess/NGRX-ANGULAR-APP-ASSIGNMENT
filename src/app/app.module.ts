@@ -5,6 +5,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import  { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -31,6 +33,8 @@ import { CoffeeEffects } from './shared/store/coffeeData.Effects';
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
     StoreModule.forRoot({ coffeeList: coffeeReducer }),
     StoreModule.forFeature('coffee data', coffeeReducer),
     EffectsModule.forRoot([CoffeeEffects]),
