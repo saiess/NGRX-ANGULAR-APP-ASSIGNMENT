@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -17,6 +17,7 @@ import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component'
 import { coffeeReducer } from './shared/store/coffeeData.reducer';
 import { CoffeeEffects } from './shared/store/coffeeData.Effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { CoffeeEffects } from './shared/store/coffeeData.Effects';
     StoreModule.forRoot({ coffeeList: coffeeReducer }),
     StoreModule.forFeature('coffee data', coffeeReducer),
     EffectsModule.forRoot([CoffeeEffects]),
+    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode})
   ],
   providers: [],
   bootstrap: [AppComponent],
